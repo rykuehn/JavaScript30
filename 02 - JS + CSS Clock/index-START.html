@@ -61,12 +61,40 @@
       background:black;
       position: absolute;
       top:50%;
+      transform-origin: 100%;
     }
 
   </style>
 
   <script>
 
+   
+
+    //setInterval()
+
+    function update() {
+
+      let currentTime = new Date();
+
+      let currentHour = (30 * currentTime.getHours()) + 90;
+      let Hourcss = `${currentHour}deg`
+
+      let currentMinute = (6 * currentTime.getMinutes()) + 90;
+      let Minutecss = `${currentMinute}deg`
+
+      let currentSecond = (6 * currentTime.getSeconds()) + 90;
+      let Secondcss = `${currentSecond}deg`
+
+      document.querySelector('div.hand.hour-hand').style.transform = `rotate(${Hourcss})`;
+
+      document.querySelector('div.hand.min-hand').style.transform = `rotate(${Minutecss})`;
+
+      document.querySelector('div.hand.second-hand').style.transform = `rotate(${Secondcss})`;
+    }
+
+    update();
+    setInterval(function(){update()}, 1000);
+    
 
   </script>
 </body>
