@@ -64,17 +64,17 @@
   <script>
   var inputs = document.querySelectorAll('.controls input');
 
-  handleSubmit = () => {
-    //let suffix = this.dataset.sizing || '';
+  function handleSubmit() {
+    let suffix = this.dataset.sizing || '';
 
-    console.log(this)
+    console.log(document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix))
   }
  
-  inputs.forEach(el => 
-    el.addEventListener('change', handleSubmit));
+  inputs.forEach(element => 
+    element.addEventListener('change', handleSubmit));
 
-   inputs.forEach(el => 
-    el.addEventListener('mousemove', handleSubmit)
+   inputs.forEach(element => 
+    element.addEventListener('mousemove', handleSubmit)
 );
 
   </script>
