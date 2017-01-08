@@ -17,6 +17,78 @@
 <script>
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+const cities = [];
+
+fetch(endpoint)
+.then((response) => {
+  return response.json();
+})
+.then((newResponse)=> {
+  cities.push(...newResponse)
+  console.log(cities)
+  return;
+})
+
+
+
+function filterCities(wordsToMatch) {
+  let reg = new RegExp(wordsToMatch, 'gi');
+
+    return cities.filter((place) => {
+      return place.city.match(reg) || place.state.match(reg)
+    })
+}
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// function displayMatches(e) {
+//   const form = document.querySelector('.suggestions');
+//   let result = filterCities(e.target.value);
+
+//   result.map(city => {
+//     var newLI = document.createElement('li');
+//     var population = document.createElement('span');
+//     var cityName = document.createElement('span');
+
+//     population.innerHTML = city.population
+//     cityName.innerHTML = `${city.city}, ${city.state}`;
+
+//     newLI.appendChild(cityName);
+//     newLI.appendChild(population)
+
+//     form.appendChild(newLI);
+
+//   })
+// }
+
+function displayMatches(e) {
+  let result = filterCities(this.value);
+  const suggestions = document.querySelector('.suggestions');
+
+  const html = result.map(city => {
+
+    const regex = new RegExp(this.value, 'gi');
+    const cityName = city.city.replace(regex, `<span class="hl">${this.value}</span>`);
+    const stateName = city.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+   return `
+     <li>
+       <span class="name">${cityName}, ${stateName}</span>
+       <span class="population">${numberWithCommas(city.population)}</span>
+     </li>
+   `;
+  }).join('');
+  suggestions.innerHTML = html
+}
+
+const form = document.querySelector('.search');
+form.addEventListener('change', displayMatches);
+form.addEventListener('keyup', displayMatches);
+
+//console.log('cities')
+
 </script>
   </body>
 </html>
