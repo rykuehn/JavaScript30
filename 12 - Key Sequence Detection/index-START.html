@@ -7,6 +7,19 @@
 </head>
 <body>
 <script>
+
+const password = 'robin';
+const secretCode=[];
+
+window.addEventListener('keyup', (e) => {
+  
+  secretCode.push(e.key);
+  secretCode.splice(-password.length - 1, secretCode.length - password.length);
+  
+  if(secretCode.join('') === password) {
+    cornify_add();
+  }
+})
 </script>
 </body>
 </html>
