@@ -4,25 +4,61 @@ const ctx = canvas.getContext('2d');
 const strip = document.querySelector('.strip');
 const snap = document.querySelector('.snap');
 
-
-navigator.getUserMedia = navigator.getUserMedia ||
-                         navigator.webkitGetUserMedia ||
-                         navigator.mozGetUserMedia;
-
-if (navigator.getUserMedia) {
-   navigator.getUserMedia({ audio: true, video: { width: 1280, height: 720 } },
-      function(stream) {
-        console.log('success')
-         // var video = document.querySelector('video');
-         // video.srcObject = stream;
-         // video.onloadedmetadata = function(e) {
-         //   video.play();
-         // };
-      },
-      function(err) {
-         console.log("The following error occurred: " + err.name);
-      }
-   );
-} else {
-   console.log("getUserMedia not supported");
+function getVideo(){
+   navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+            .then(localMediaStream => {
+              video.src = window.URL.createObjectURL(localMediaStream);
+              video.play();
+            })
+            .catch(err => console.log('error'));         
 }
+
+function PaintVideo() {
+  const width = video.videoWidth;
+  const height = video.videoHeight;
+
+  canvas.width = width;
+  canvas.height = height;
+
+
+  setInterval(()=> {
+    ctx.drawImage(video, 0, 0, width, height)
+    //take the pixels out
+    let pixels = ctx.getImageData(0,0, width, height);
+    //mess with them
+    pixels = redEffect(pixels);
+    //put them back
+    ctx.putImageData(pixels, 0, 0);
+
+
+  }, 16);
+
+}
+
+function redEffect(pixels) {
+ for(let i = 0; i < pixels.data.length; i+=4) {
+   pixels.data[i + 0] = pixels.data[i + 0] + 200; // RED
+   pixels.data[i + 1] = pixels.data[i + 1] - 50; // GREEN
+   pixels.data[i + 2] = pixels.data[i + 2] * 0.5; // Blue
+ }
+ return pixels;
+}
+
+function takePhoto() {
+  //play the sound
+  snap.currentTime = 0;
+  snap.play();
+
+  const data = canvas.toDataURL('image/jpeg');
+  const link = document.createElement('a');
+  link.href = data;
+  link.setAttribute('download', 'handsome');
+  link.textContent = 'Download Image';
+  link.innerHTML = `<img src="${data}" alt="Hansome Man" />`
+
+  strip.insertBefore(link, strip.firstChild)
+}
+
+getVideo();
+
+video.addEventListener('canplay', PaintVideo);
