@@ -40,6 +40,17 @@
 <button></button>
 <script>
 
+const divs = document.querySelectorAll('div');
+
+logText = (e) => {
+  e.stopPropagation();
+  //console.log(this.classList)
+  console.log(e.target.className)
+}
+
+divs.forEach(div => div.addEventListener('click', logText, {capture: false, once: true})
+
+  //ONCE unbinds the function -- only allows user to click once until page is refreshed
 </script>
 </body>
 </html>
